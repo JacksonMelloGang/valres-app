@@ -2,21 +2,24 @@ package fr.valres.app;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     final MySQLiteHelper db = new MySQLiteHelper(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
         EditText ztLogin = (EditText) findViewById(R.id.ztLogin);
         EditText ztPassword = (EditText) findViewById(R.id.ztPassword);
@@ -30,22 +33,17 @@ public class MainActivity extends AppCompatActivity {
                 String password = ztPassword.getText().toString();
 
                 if (login.length() == 0 || password.length() == 0) {
-                    Toast.makeText(MainActivity.this, "Login ou mot de passe vide", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Login ou mot de passe vide", Toast.LENGTH_SHORT).show();
                 } else {
                     if(db.login(login, password)){
-                        Toast.makeText(MainActivity.this, "Login et mot de passe OK", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Login et mot de passe OK", Toast.LENGTH_SHORT).show();
 
-                        Intent intent = new Intent(MainActivity.this, ChoixDateSalle.class);
+                        Intent intent = new Intent(LoginActivity.this, ChoixDateSalle.class);
                         startActivity(intent);
                     }
                 }
             }
         });
 
-     }
-
-
-
-
-
+    }
 }

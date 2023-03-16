@@ -6,28 +6,80 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/btnSalle"
-        android:layout_width="251dp"
-        android:layout_height="71dp"
-        android:text="Salle"
-        tools:layout_editor_absoluteX="80dp"
-        tools:layout_editor_absoluteY="106dp" />
+    <TextView
+        android:id="@+id/tvlogin"
+        android:layout_width="69dp"
+        android:layout_height="22dp"
+        android:layout_marginStart="68dp"
+        android:layout_marginEnd="343dp"
+        android:layout_marginBottom="540dp"
+        android:text="@string/tvloginlabel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="@string/tvloginlabel" />
+
+    <EditText
+        android:id="@+id/ztLogin"
+        android:layout_width="312dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginEnd="55dp"
+        android:ems="10"
+        android:hint="@string/tvloginlabel"
+        android:inputType="textEmailAddress"
+        app:layout_constraintBottom_toTopOf="@+id/tvmdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvlogin"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <EditText
+        android:id="@+id/ztPassword"
+        android:layout_width="312dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="54dp"
+        android:ems="10"
+        android:hint="@string/tvmdp"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvmdp" />
+
+    <TextView
+        android:id="@+id/tvmdp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="46dp"
+        android:layout_marginTop="104dp"
+        android:layout_marginEnd="307dp"
+        android:text="@string/tvmdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvlogin"
+        app:layout_constraintVertical_bias="0.064"
+        tools:text="@string/tvmdp" />
 
     <Button
-        android:id="@+id/btnWifi"
-        android:layout_width="186dp"
-        android:layout_height="58dp"
-        android:text="Wifi"
-        tools:layout_editor_absoluteX="112dp"
-        tools:layout_editor_absoluteY="288dp" />
-
-    <Button
-        android:id="@+id/btnOption"
-        android:layout_width="186dp"
-        android:layout_height="58dp"
-        android:text="Option"
-        tools:layout_editor_absoluteX="112dp"
-        tools:layout_editor_absoluteY="446dp" />
-
+        android:id="@+id/btConnect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="131dp"
+        android:layout_marginEnd="132dp"
+        android:layout_marginBottom="199dp"
+        android:text="@string/btConnect"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvmdp"
+        app:layout_constraintVertical_bias="0.655"
+        tools:text="@string/btConnect" />
 </androidx.constraintlayout.widget.ConstraintLayout>
