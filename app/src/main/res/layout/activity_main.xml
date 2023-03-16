@@ -6,13 +6,28 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <Button
+        android:id="@+id/btnSalle"
+        android:layout_width="251dp"
+        android:layout_height="71dp"
+        android:text="Salle"
+        tools:layout_editor_absoluteX="80dp"
+        tools:layout_editor_absoluteY="106dp" />
+
+    <Button
+        android:id="@+id/btnWifi"
+        android:layout_width="186dp"
+        android:layout_height="58dp"
+        android:text="Wifi"
+        tools:layout_editor_absoluteX="112dp"
+        tools:layout_editor_absoluteY="288dp" />
+
+    <Button
+        android:id="@+id/btnOption"
+        android:layout_width="186dp"
+        android:layout_height="58dp"
+        android:text="Option"
+        tools:layout_editor_absoluteX="112dp"
+        tools:layout_editor_absoluteY="446dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
