@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">Digicode M2L</string>
+    <string name="app_name">ProjetAndroidBd</string>
+    <string name="tvloginlabel">Mail</string>
+    <string name="tvmdp">Mot de passe</string>
+    <string name="btConnect">Se connecter</string>
+    <string name="loginbutton">Button</string>
 </resources>
