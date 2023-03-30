@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,11 +15,20 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Date;
+
+import fr.valres.app.utils.HTMLRequest;
+import fr.valres.app.utils.ValresWebsiteGet;
 
 public class ChoixDateSalle extends AppCompatActivity {
 
     final MySQLiteHelper db = new MySQLiteHelper(ChoixDateSalle.this);
+    public static final String HTTP_SALLE = "http://valres.test:8080/api/salles";
+    private String[] salles = {};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +43,18 @@ public class ChoixDateSalle extends AppCompatActivity {
 
         Button button = (Button) findViewById(R.id.button);
 
+        // check if android device is connected to internet
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
+        if(cm.getActiveNetworkInfo() == null){
+            Toast.makeText(ChoixDateSalle.this, "Pas de connexion internet", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
+        new ValresWebsiteGet(ChoixDateSalle.this).execute(HTTP_SALLE);
+
         // add items in lvSalles
-        String[] salles = {"Majorelle", "Gruber", "Lamour", "Longwy"};
+        // String[] salles = {"Majorelle", "Gruber", "Lamour", "Longwy"};
 
         lvSalle.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, salles));
 
@@ -98,5 +118,13 @@ public class ChoixDateSalle extends AppCompatActivity {
             }
         });
 
+    }
+
+    public String[] getSalles() {
+        return salles;
+    }
+
+    public void setSalles(String[] salles) {
+        this.salles = salles;
     }
 }
