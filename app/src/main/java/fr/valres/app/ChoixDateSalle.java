@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -37,6 +38,7 @@ public class ChoixDateSalle extends AppCompatActivity {
         String[] salles = {"Majorelle", "Gruber", "Lamour", "Longwy"};
 
         lvSalle.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, salles));
+        lvSalle.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
         lvSalle.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -63,8 +65,9 @@ public class ChoixDateSalle extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                // get code from salle
+                Intent intent = new Intent(ChoixDateSalle.this, AfficherDigicodeActivity.class);
+                startActivity(intent);
+                /*// get code from salle
                 int numSalle = lvSalle.getCheckedItemPosition()+1;
                 Date date = new Date(calendarView.getDate());
 
@@ -93,7 +96,7 @@ public class ChoixDateSalle extends AppCompatActivity {
                 AlertDialog alertDialog = new AlertDialog.Builder(ChoixDateSalle.this).create();
                 alertDialog.setTitle("Code");
                 alertDialog.setMessage(String.format("Code : %s", code));
-                alertDialog.show();
+                alertDialog.show();*/
 
             }
         });

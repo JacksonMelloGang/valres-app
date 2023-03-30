@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AfficherDigicodeActivity">
+
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/digicodelabel"
+        android:textSize="100px"
+        tools:layout_editor_absoluteX="39dp"
+        tools:layout_editor_absoluteY="59dp" />
+
+    <TextView
+        android:id="@+id/digicode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="4613"
+        android:textSize="300px"
+        tools:layout_editor_absoluteX="77dp"
+        tools:layout_editor_absoluteY="226dp" />
+
+    <Button
+        android:id="@+id/btRetour"
+        android:layout_width="163dp"
+        android:layout_height="49dp"
+        android:text="Retour"
+        tools:layout_editor_absoluteX="124dp"
+        tools:layout_editor_absoluteY="500dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
