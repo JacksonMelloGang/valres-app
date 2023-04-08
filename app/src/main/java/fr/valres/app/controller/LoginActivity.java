@@ -1,4 +1,4 @@
-package fr.valres.app;
+package fr.valres.app.controller;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import fr.valres.app.MySQLiteHelper;
+import fr.valres.app.R;
 
 public class LoginActivity extends AppCompatActivity {
 

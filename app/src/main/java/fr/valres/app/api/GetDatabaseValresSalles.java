@@ -1,28 +1,27 @@
-package fr.valres.app.utils;
+package fr.valres.app.api;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
-import fr.valres.app.ChoixDateSalle;
+import fr.valres.app.R;
+import fr.valres.app.controller.ChoixSalleActivity;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class ValresWebsiteGet extends AsyncTask<String, Void, String> {
+public class GetDatabaseValresSalles extends AsyncTask<String, Void, String> {
 
     private String response;
     private final Context context;
 
-    public ValresWebsiteGet(Context context) {
+    public GetDatabaseValresSalles(Context context) {
         this.context = context;
     }
 
@@ -50,20 +49,28 @@ public class ValresWebsiteGet extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
 
-        ChoixDateSalle choixDateSalle = (ChoixDateSalle) context;
+        ChoixSalleActivity choixDateSalle = (ChoixSalleActivity) context;
 
+        // from this, we get a response like this: [{"salle_id":"1", "salle_nom": "Salle 1", "cat_id":1}, {"salle_id":"2", "salle_nom": "Salle 2", "cat_id":1}]
+        // we want to convert this response into a json object
+        // then, we want to get the value of the key "salle_nom" for each object
+        // and put it in a String[]
         String[] salles = {};
+
         try {
-            JSONObject json = new JSONObject(s);
+            JSONArray json = new JSONArray(s);
             String[] jsonSalles = new String[json.length()];
             for(int i = 0; i < json.length(); i++){
-                jsonSalles[i] = json.getString(String.valueOf(i));
+                jsonSalles[i] = json.getJSONObject(i).getString("salle_nom");
             }
             salles = jsonSalles;
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        choixDateSalle.setSalles(salles);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_single_choice, salles);
+        ListView lvSalle = ((ChoixSalleActivity) context).findViewById(R.id.listSalles);
+        lvSalle.setAdapter(adapter);
+        lvSalle.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
     }
 }

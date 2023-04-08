@@ -1,4 +1,6 @@
-package fr.valres.app;
+package fr.valres.app.controller;
+
+import static android.widget.AdapterView.INVALID_POSITION;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,19 +14,23 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
+import java.time.LocalDate;
 import java.util.Date;
 
-import fr.valres.app.utils.ValresWebsiteGet;
+import fr.valres.app.MySQLiteHelper;
+import fr.valres.app.R;
+import fr.valres.app.api.GetDatabaseValresSalles;
 
 public class ChoixSalleActivity extends AppCompatActivity {
 
     final MySQLiteHelper db = new MySQLiteHelper(ChoixSalleActivity.this);
-    public static final String HTTP_SALLE = "http://valres.test:8080/api/salles";
+    private final String HTTP_SALLE = this.getString(R.string.url_api_salles);
+
     private String[] salles = {};
+    private Long dateLong = 0L;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +39,6 @@ public class ChoixSalleActivity extends AppCompatActivity {
 
         CalendarView calendarView = (CalendarView) findViewById(R.id.calendarView);
         ListView lvSalle = (ListView) findViewById(R.id.listSalles);
-
-        TextView txMois = (TextView) findViewById(R.id.txMois);
-        TextView txSalle = (TextView) findViewById(R.id.txSalle);
 
         Button button = (Button) findViewById(R.id.button);
 
@@ -47,7 +50,7 @@ public class ChoixSalleActivity extends AppCompatActivity {
         }
 
 
-        new ValresWebsiteGet(ChoixSalleActivity.this).execute(HTTP_SALLE);
+        new GetDatabaseValresSalles(ChoixSalleActivity.this).execute(HTTP_SALLE);
 
         // add items in lvSalles
         // String[] salles = {"Majorelle", "Gruber", "Lamour", "Longwy"};
@@ -63,16 +66,13 @@ public class ChoixSalleActivity extends AppCompatActivity {
                 numSalle = position+1;
                 lvSalle.setItemChecked(position, true);
 
-                txSalle.setText(String.format("Salle n°%s : %s", numSalle, salle));
-
             }
         });
 
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                String date = dayOfMonth + "/" + month + "/" + year;
-                txMois.setText(date);
+                dateLong = LocalDate.of(year, month, dayOfMonth).toEpochDay(); //convert localdate to long value
             }
         });
 
@@ -82,10 +82,10 @@ public class ChoixSalleActivity extends AppCompatActivity {
 
                 // get code from salle
                 int numSalle = lvSalle.getCheckedItemPosition()+1;
-                Date date = new Date(calendarView.getDate());
+                Date date = new Date(dateLong);
 
                 // if no date selected or no salle selected
-                if(txMois.getText().toString().length() == 0 || txSalle.getText().toString().length() == 0){
+                if(numSalle == INVALID_POSITION){
                     AlertDialog alertDialog = new AlertDialog.Builder(ChoixSalleActivity.this).create();
                     alertDialog.setTitle("Code");
                     alertDialog.setMessage("Aucune salle ou date sélectionnée");

@@ -4,4 +4,11 @@
     <string name="tvmdp">Mot de passe</string>
     <string name="btConnect">Se connecter</string>
     <string name="loginbutton">Button</string>
+    <string name="bt_code">Code</string>
+    <string name="bt_wifi">Wifi</string>
+    <string name="bt_param">Paramètres</string>
+
+
+    <string name="url_api_login">http://10.42.0.199/api/v1/login</string>
+    <string name="url_api_salles">http://10.42.0.199/api/v1/salles</string>
 </resources>

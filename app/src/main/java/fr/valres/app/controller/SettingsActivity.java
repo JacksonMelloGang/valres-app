@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import fr.valres.app.R;
+
 public class SettingsActivity extends AppCompatActivity {
 
     @Override
