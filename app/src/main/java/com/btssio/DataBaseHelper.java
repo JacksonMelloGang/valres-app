@@ -30,40 +30,40 @@ private final Context myContext;
   * @param context
   */
 public DataBaseHelper(Context context) {
- 
-super(context, DB_NAME, null, 1);
-this.myContext = context;
+
+    super(context, DB_NAME, null, 1);
+    this.myContext = context;
 }	
  
 /**
   * Creates a empty database on the system and rewrites it with your own database.
   * */
 public void createDataBase() throws IOException{
- 
-boolean dbExist = checkDataBase();
- 
-if(dbExist){
-//do nothing - database already exist
-}else{
- 
-//By calling this method and empty database will be created into the default system path
-//of your application so we are gonna be able to overwrite that database with our database.
-this.getReadableDatabase();
-// ajout car erreur sur lecture
 
- 
-try {
- 
-copyDataBase();
- 
-} catch (IOException e) {
- 
-throw new Error("Error copying database");
- 
-}
-}
-//ajout car erreur sur lecture
-this.close();
+    boolean dbExist = checkDataBase();
+
+    if(dbExist){
+    //do nothing - database already exist
+    }else{
+
+    //By calling this method and empty database will be created into the default system path
+    //of your application so we are gonna be able to overwrite that database with our database.
+        this.getReadableDatabase();
+    // ajout car erreur sur lecture
+
+
+        try {
+
+            copyDataBase();
+
+        } catch (IOException e) {
+
+            throw new Error("Error copying database");
+
+        }
+    }
+    //ajout car erreur sur lecture
+    this.close();
 }
  
 /**
@@ -71,26 +71,26 @@ this.close();
   * @return true if it exists, false if it doesn't
   */
 private boolean checkDataBase(){
- 
-SQLiteDatabase checkDB = null;
- 
-try{
-String myPath = DB_PATH + DB_NAME;
-checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
- 
-}catch(SQLiteException e){
- 
-//database n'existe pas deja.
- 
-}
- 
-if(checkDB != null){
- 
-checkDB.close();
- 
-}
- 
-return checkDB != null ? true : false;
+
+    SQLiteDatabase checkDB = null;
+
+    try{
+        String myPath = DB_PATH + DB_NAME;
+        checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+
+    }catch(SQLiteException e){
+
+    //database n'existe pas deja.
+
+    }
+
+    if(checkDB != null){
+
+        checkDB.close();
+
+    }
+
+    return checkDB != null ? true : false;
 }
  
 /**
@@ -99,45 +99,45 @@ return checkDB != null ? true : false;
   * This is done by transfering bytestream.
   * */
 private void copyDataBase() throws IOException{
- 
-//Open your local db as the input stream
-InputStream myInput = myContext.getAssets().open(DB_NAME);
- 
-// Path to the just created empty db
-String outFileName = DB_PATH + DB_NAME;
- 
-//Open the empty db as the output stream
-OutputStream myOutput = new FileOutputStream(outFileName);
- 
-//transfer bytes from the inputfile to the outputfile
-byte[] buffer = new byte[1024];
-int length;
-while ((length = myInput.read(buffer))>0){
-myOutput.write(buffer, 0, length);
-}
- 
-//Close the streams
-myOutput.flush();
-myOutput.close();
-myInput.close();
- 
+
+    //Open your local db as the input stream
+    InputStream myInput = myContext.getAssets().open(DB_NAME);
+
+    // Path to the just created empty db
+    String outFileName = DB_PATH + DB_NAME;
+
+    //Open the empty db as the output stream
+    OutputStream myOutput = new FileOutputStream(outFileName);
+
+    //transfer bytes from the inputfile to the outputfile
+    byte[] buffer = new byte[1024];
+    int length;
+    while ((length = myInput.read(buffer))>0){
+        myOutput.write(buffer, 0, length);
+    }
+
+    //Close the streams
+    myOutput.flush();
+    myOutput.close();
+    myInput.close();
+
 }
  
 public void openDataBase() throws SQLException{
- 
-//Open the database
-String myPath = DB_PATH + DB_NAME;
-myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
- 
+
+    //Open the database
+    String myPath = DB_PATH + DB_NAME;
+    myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+
 }
  
 @Override
 public synchronized void close() {
- 
-if(myDataBase != null)
-myDataBase.close();
- 
-super.close();
+
+    if(myDataBase != null)
+        myDataBase.close();
+
+    super.close();
  
 }
  
@@ -150,7 +150,31 @@ public void onCreate(SQLiteDatabase db) {
 public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
  
 }
- 
+
+    public boolean login(String login, String password) {
+        Log.i("test", "debut");
+        try {
+            createDataBase();
+        } catch (IOException e) {
+        }
+        openDataBase();
+        Log.i("test", "ouvert");
+        SQLiteDatabase db = this.getWritableDatabase();
+        Log.i("test","centre");
+        Cursor mCursor = db.rawQuery("SELECT * FROM USERS WHERE login=? AND password=?", new String[]{login,password});
+        Log.i("test","fin");
+
+        if (mCursor != null) {
+            // S'il y a un resultat...
+            if(mCursor.getCount() > 0)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 // Add your public helper methods to access and get content from the database.
 // You could return cursors by doing "return myDataBase.query(....)" so it'd be easy
 // to you to create adapters for your views.
