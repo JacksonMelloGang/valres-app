@@ -16,17 +16,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.Date;
 
-import fr.valres.app.utils.HTMLRequest;
 import fr.valres.app.utils.ValresWebsiteGet;
 
-public class ChoixDateSalle extends AppCompatActivity {
+public class ChoixSalleActivity extends AppCompatActivity {
 
-    final MySQLiteHelper db = new MySQLiteHelper(ChoixDateSalle.this);
+    final MySQLiteHelper db = new MySQLiteHelper(ChoixSalleActivity.this);
     public static final String HTTP_SALLE = "http://valres.test:8080/api/salles";
     private String[] salles = {};
 
@@ -46,12 +42,12 @@ public class ChoixDateSalle extends AppCompatActivity {
         // check if android device is connected to internet
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
         if(cm.getActiveNetworkInfo() == null){
-            Toast.makeText(ChoixDateSalle.this, "Pas de connexion internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ChoixSalleActivity.this, "Pas de connexion internet", Toast.LENGTH_SHORT).show();
             return;
         }
 
 
-        new ValresWebsiteGet(ChoixDateSalle.this).execute(HTTP_SALLE);
+        new ValresWebsiteGet(ChoixSalleActivity.this).execute(HTTP_SALLE);
 
         // add items in lvSalles
         // String[] salles = {"Majorelle", "Gruber", "Lamour", "Longwy"};
@@ -90,7 +86,7 @@ public class ChoixDateSalle extends AppCompatActivity {
 
                 // if no date selected or no salle selected
                 if(txMois.getText().toString().length() == 0 || txSalle.getText().toString().length() == 0){
-                    AlertDialog alertDialog = new AlertDialog.Builder(ChoixDateSalle.this).create();
+                    AlertDialog alertDialog = new AlertDialog.Builder(ChoixSalleActivity.this).create();
                     alertDialog.setTitle("Code");
                     alertDialog.setMessage("Aucune salle ou date sélectionnée");
                     alertDialog.show();
@@ -101,7 +97,7 @@ public class ChoixDateSalle extends AppCompatActivity {
                 int code = db.recupDigicode(numSalle, date);
 
                 if(code == 0){
-                    AlertDialog alertDialog = new AlertDialog.Builder(ChoixDateSalle.this).create();
+                    AlertDialog alertDialog = new AlertDialog.Builder(ChoixSalleActivity.this).create();
                     alertDialog.setTitle("Code");
                     alertDialog.setMessage("Aucun code trouvé");
                     alertDialog.show();
@@ -109,8 +105,8 @@ public class ChoixDateSalle extends AppCompatActivity {
                     return;
                 }
 
-                Toast.makeText(ChoixDateSalle.this, String.format("Code : %s", code), Toast.LENGTH_LONG).show();
-                AlertDialog alertDialog = new AlertDialog.Builder(ChoixDateSalle.this).create();
+                Toast.makeText(ChoixSalleActivity.this, String.format("Code : %s", code), Toast.LENGTH_LONG).show();
+                AlertDialog alertDialog = new AlertDialog.Builder(ChoixSalleActivity.this).create();
                 alertDialog.setTitle("Code");
                 alertDialog.setMessage(String.format("Code : %s", code));
                 alertDialog.show();
