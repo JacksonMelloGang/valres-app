@@ -19,7 +19,7 @@ import okhttp3.Response;
 public class GetDatabaseValresSalles extends AsyncTask<String, Void, String> {
 
     private String response;
-    private final Context context;
+    private Context context;
 
     public GetDatabaseValresSalles(Context context) {
         this.context = context;

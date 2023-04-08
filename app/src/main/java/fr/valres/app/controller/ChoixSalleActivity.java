@@ -49,7 +49,6 @@ public class ChoixSalleActivity extends AppCompatActivity {
             return;
         }
 
-
         new GetDatabaseValresSalles(ChoixSalleActivity.this).execute(HTTP_SALLE);
 
         // add items in lvSalles
