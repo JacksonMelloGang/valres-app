@@ -29,9 +29,6 @@ public class ChoixDateSalle extends AppCompatActivity {
         CalendarView calendarView = (CalendarView) findViewById(R.id.calendarView);
         ListView lvSalle = (ListView) findViewById(R.id.listSalles);
 
-        TextView txMois = (TextView) findViewById(R.id.txMois);
-        TextView txSalle = (TextView) findViewById(R.id.txSalle);
-
         Button button = (Button) findViewById(R.id.button);
 
         // add items in lvSalles
@@ -49,8 +46,6 @@ public class ChoixDateSalle extends AppCompatActivity {
                 numSalle = position+1;
                 lvSalle.setItemChecked(position, true);
 
-                txSalle.setText(String.format("Salle n°%s : %s", numSalle, salle));
-
             }
         });
 
@@ -58,10 +53,19 @@ public class ChoixDateSalle extends AppCompatActivity {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
                 String date = dayOfMonth + "/" + month + "/" + year;
-                txMois.setText(date);
             }
         });
 
+        Button btRetour = (Button) findViewById(R.id.btRetour);
+
+        btRetour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*Intent intent = new Intent(AfficherDigicodeActivity.this, ChoixDateSalle.class);
+                startActivity(intent);*/
+                finish();
+            }
+        });
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

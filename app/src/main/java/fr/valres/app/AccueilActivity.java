@@ -17,7 +17,7 @@ public class AccueilActivity extends AppCompatActivity {
         Button btnSalle = (Button) findViewById(R.id.btSalle);
         Button btnWifi = (Button) findViewById(R.id.btWifi);
         Button btnParam = (Button) findViewById(R.id.btParam);
-        Button btnQuitter = (Button) findViewById(R.id.btQuitter);
+        Button btnDeco = (Button) findViewById(R.id.btDeco);
 
         btnSalle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -34,10 +34,10 @@ public class AccueilActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        btnQuitter.setOnClickListener(new View.OnClickListener() {
+        btnDeco.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.exit(0);
+                finish();
             }
         });
     }

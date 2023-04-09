@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">DigitalCode - M2L</string>
     <string name="tvloginlabel">Mail</string>
-    <string name="digicodelabel">Voici votre digicode</string>
+    <string name="digicodelabel">Voici votre digicode :</string>
     <string name="tvmdp">Mot de passe</string>
     <string name="btConnect">Se connecter</string>
     <string name="loginbutton">Button</string>
@@ -9,5 +9,6 @@
     <string name="btSalle">Salle</string>
     <string name="btWifi">Wifi</string>
     <string name="btParam">Paramètre</string>
-    <string name="btQuitter">Quitter</string>
+    <string name="btDeco">Déconnexion</string>
+    <string name="tvWifi">Voici le code wifi :</string>
 </resources>

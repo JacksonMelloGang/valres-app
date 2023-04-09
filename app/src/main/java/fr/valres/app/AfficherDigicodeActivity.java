@@ -20,8 +20,6 @@ public class AfficherDigicodeActivity extends AppCompatActivity {
         btRetour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Intent intent = new Intent(AfficherDigicodeActivity.this, ChoixDateSalle.class);
-                startActivity(intent);*/
                 finish();
             }
         });
