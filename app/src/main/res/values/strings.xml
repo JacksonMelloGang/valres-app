@@ -5,4 +5,9 @@
     <string name="tvmdp">Mot de passe</string>
     <string name="btConnect">Se connecter</string>
     <string name="loginbutton">Button</string>
+    <string name="retour">Retour</string>
+    <string name="btSalle">Salle</string>
+    <string name="btWifi">Wifi</string>
+    <string name="btParam">Paramètre</string>
+    <string name="btQuitter">Quitter</string>
 </resources>

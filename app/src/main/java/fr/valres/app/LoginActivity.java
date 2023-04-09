@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
                     if(db.login(login, password)){
                         Toast.makeText(LoginActivity.this, "Login et mot de passe OK", Toast.LENGTH_SHORT).show();
 
-                        Intent intent = new Intent(LoginActivity.this, ChoixDateSalle.class);
+                        Intent intent = new Intent(LoginActivity.this, AccueilActivity.class);
                         startActivity(intent);
                     }
                 }

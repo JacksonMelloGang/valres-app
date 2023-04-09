@@ -16,14 +16,26 @@
         android:theme="@style/Theme.Valresapp"
         tools:targetApi="31">
         <activity
+            android:name=".WifiActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AccueilActivity"
+            android:exported="false" />
+        <activity
             android:name=".AfficherDigicodeActivity"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
-            android:exported="true"></activity>
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ChoixDateSalle"
-            android:exported="true"></activity>
+            android:exported="true" />
     </application>
 
 </manifest>
