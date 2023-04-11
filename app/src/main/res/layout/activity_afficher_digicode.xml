@@ -26,7 +26,6 @@
         android:layout_marginStart="77dp"
         android:layout_marginTop="57dp"
         android:layout_marginEnd="77dp"
-        android:text="4613"
         android:textSize="300px"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

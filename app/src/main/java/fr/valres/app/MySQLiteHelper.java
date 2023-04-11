@@ -41,7 +41,22 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO users VALUES(1,'a@gmail.com',123)");
         db.execSQL("INSERT INTO users VALUES(2,'b@gmail.com',456)");
 
-        db.execSQL("INSERT INTO code VALUES(1,123,1,'2020-12-12')");
+
+
+        //Création de la table digicode
+        String CREATE_SALLE_TABLE = "CREATE TABLE salles ( " +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, "+
+                "name TEXT)";
+
+        db.execSQL(CREATE_SALLE_TABLE);
+        // Creation d'un jeu d'essai
+
+        db.execSQL("INSERT INTO salles VALUES(1,'Majorelle')");
+        db.execSQL("INSERT INTO salles VALUES(2,'Gruber')");
+        db.execSQL("INSERT INTO salles VALUES(3,'Lamour')");
+        db.execSQL("INSERT INTO salles VALUES(4,'Longwy')");
+
+        db.execSQL("INSERT INTO code VALUES(1,1234,1,'2023-04-01')");
             }
  
     @Override

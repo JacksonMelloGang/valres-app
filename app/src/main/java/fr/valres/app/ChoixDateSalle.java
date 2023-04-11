@@ -2,8 +2,6 @@ package fr.valres.app;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,15 +10,18 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ChoixDateSalle extends AppCompatActivity {
 
     final MySQLiteHelper db = new MySQLiteHelper(ChoixDateSalle.this);
-
+    static int numSalle = 0;
+    static Date date = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +30,7 @@ public class ChoixDateSalle extends AppCompatActivity {
         CalendarView calendarView = (CalendarView) findViewById(R.id.calendarView);
         ListView lvSalle = (ListView) findViewById(R.id.listSalles);
 
-        Button button = (Button) findViewById(R.id.button);
+        Button btAffichageDigicode = (Button) findViewById(R.id.btAfficheDigicode);
 
         // add items in lvSalles
         String[] salles = {"Majorelle", "Gruber", "Lamour", "Longwy"};
@@ -41,8 +42,7 @@ public class ChoixDateSalle extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                String salle = (String) parent.getItemAtPosition(position);
-                int numSalle = 0;
+                //String salle = (String) parent.getItemAtPosition(position);
                 numSalle = position+1;
                 lvSalle.setItemChecked(position, true);
 
@@ -52,7 +52,12 @@ public class ChoixDateSalle extends AppCompatActivity {
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                String date = dayOfMonth + "/" + month + "/" + year;
+                DateFormat dateF = new SimpleDateFormat("dd-MM-yyyy");
+                try {
+                    date = dateF.parse(dayOfMonth + "-"+ month +"-"+year);
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -61,16 +66,29 @@ public class ChoixDateSalle extends AppCompatActivity {
         btRetour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Intent intent = new Intent(AfficherDigicodeActivity.this, ChoixDateSalle.class);
-                startActivity(intent);*/
                 finish();
             }
         });
-        button.setOnClickListener(new View.OnClickListener() {
+        btAffichageDigicode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ChoixDateSalle.this, AfficherDigicodeActivity.class);
-                startActivity(intent);
+                if (numSalle==0&&date==null) {
+                    Toast toast = Toast.makeText(getApplicationContext(), "Veuillez selectionner une salle ainsi qu'une date",Toast.LENGTH_LONG);
+                    toast.show();
+                }
+                else {
+                    int digicode = db.recupDigicode(numSalle, date);
+                    if (digicode==0) {
+                        Toast toast = Toast.makeText(getApplicationContext(), "Aucun digicode n'est disponible pour cette salle à cette date",Toast.LENGTH_LONG);
+                        toast.show();
+                    }
+                    else {
+                        Intent intent = new Intent(ChoixDateSalle.this, AfficherDigicodeActivity.class);
+                        intent.putExtra("digicode", digicode);
+                        startActivity(intent);
+                    }
+                }
+
                 /*// get code from salle
                 int numSalle = lvSalle.getCheckedItemPosition()+1;
                 Date date = new Date(calendarView.getDate());
