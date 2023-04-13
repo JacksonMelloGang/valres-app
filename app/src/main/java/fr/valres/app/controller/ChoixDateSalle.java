@@ -1,4 +1,4 @@
-package fr.valres.app;
+package fr.valres.app.controller;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,18 +16,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.Date;
 
-import fr.valres.app.utils.HTMLRequest;
+import fr.valres.app.MySQLiteHelper;
+import fr.valres.app.R;
 import fr.valres.app.utils.ValresWebsiteGet;
 
 public class ChoixDateSalle extends AppCompatActivity {
 
     final MySQLiteHelper db = new MySQLiteHelper(ChoixDateSalle.this);
-    public static final String HTTP_SALLE = "http://valres.test:8080/api/salles";
+    public static final String HTTP_SALLE = "http://172.16.225.170:8080/api/salles";
     private String[] salles = {};
 
     @Override

@@ -17,7 +17,7 @@
         android:theme="@style/Theme.Valresapp"
         tools:targetApi="31">
         <activity
-            android:name=".LoginActivity"
+            android:name=".controller.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,11 +26,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MenuActivity"
+            android:name=".controller.MenuActivity"
             android:exported="true">
         </activity>
         <activity
-            android:name=".ChoixDateSalle"
+            android:name=".controller.ChoixDateSalle"
             android:exported="true">
         </activity>
     </application>
