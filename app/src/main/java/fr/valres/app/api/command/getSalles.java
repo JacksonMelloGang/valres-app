@@ -9,7 +9,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class getSalles extends Command{
+public class getSalles extends Command {
 
     public getSalles(Context context){
         super(context);
