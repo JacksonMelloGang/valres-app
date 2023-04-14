@@ -25,7 +25,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         String CREATE_USER_TABLE = "CREATE TABLE users ( " +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "login TEXT, "+
-                "password TEXT )";
+                "password TEXT)";
 
         String CREATE_CODE_TABLE = "CREATE TABLE code (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
