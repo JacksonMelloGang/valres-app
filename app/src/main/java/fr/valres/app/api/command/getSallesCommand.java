@@ -5,13 +5,14 @@ import android.content.Context;
 import java.io.IOException;
 import java.util.UUID;
 
+import fr.valres.app.api.ValresAPI;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class getSalles extends Command {
+public class getSallesCommand extends Command {
 
-    public getSalles(Context context){
+    public getSallesCommand(Context context){
         super(context);
     }
     @Override
@@ -24,7 +25,7 @@ public class getSalles extends Command {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(urlRequest())
-                .header("Authorization", "Bearer " + UUID.randomUUID().toString())
+                .header("Authorization", ValresAPI.getInstance().getToken())
                 .build();
 
         try (Response response = client.newCall(request).execute()) {

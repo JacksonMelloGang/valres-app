@@ -47,15 +47,15 @@ public class LoginActivity extends AppCompatActivity {
 
                     try {
                         AsyncTask task = new ValresAPIToken(context).execute("http://172.16.225.76:8080/api/v1/token", login, password);
-                        task.get(2000L, TimeUnit.MILLISECONDS);
-                    } catch (ExecutionException | InterruptedException | TimeoutException e) {
+                        task.get();
+                    } catch (ExecutionException | InterruptedException e) {
                         e.printStackTrace();
                     }
 
-                    if(ValresAPI.getInstance().getToken() != null){
+                    if(ValresAPI.getInstance() != null){
                         Toast.makeText(LoginActivity.this, "Connexion réussie", Toast.LENGTH_SHORT).show();
 
-                        Intent intent = new Intent(LoginActivity.this, MenuActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, AccueilActivity.class);
                         startActivity(intent);
                     }else{
                         Toast.makeText(LoginActivity.this, "Connexion échouée", Toast.LENGTH_SHORT).show();
