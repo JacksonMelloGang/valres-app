@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import fr.valres.app.api.ValresAPI;
 import fr.valres.app.controller.ChoixDateSalle;
+import fr.valres.app.model.Categorie;
 import fr.valres.app.model.Salle;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -49,6 +50,10 @@ public class ValresWebsiteGet extends AsyncTask<String, Void, ArrayList<Salle>> 
                         for(int i = 0; i < json.length(); i++){
                             JSONObject salle = json.getJSONObject(i);
                             jsonSalles[i] = salle.getString("salle_nom");
+
+                            String salleName = salle.getString("salle_nom");
+                            int salleId = salle.getInt("salle_id");
+
                         }
                         salles = jsonSalles;
                     } catch (JSONException e) {
@@ -71,10 +76,7 @@ public class ValresWebsiteGet extends AsyncTask<String, Void, ArrayList<Salle>> 
     protected void onPostExecute(ArrayList<Salle> s) {
         super.onPostExecute(s);
 
-        Salle[] salles = new Salle[s.size()];
-        for(int i = 0; i < s.size(); i++){
-            String salleNom = salles[i] = s.get(i).getNom();
-        }
+        ChoixDateSalle choixDateSalle = (ChoixDateSalle) context;
 
     }
 }
