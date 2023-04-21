@@ -97,12 +97,6 @@ public class ChoixDateSalle extends AppCompatActivity {
                         Intent intent = new Intent(ChoixDateSalle.this, AfficherDigicodeActivity.class);
                         intent.putExtras(b);
                         startActivity(intent);
-//
-//                        AlertDialog.Builder builder = new AlertDialog.Builder(ChoixDateSalle.this);
-//                        builder.setTitle("Code");
-//                        builder.setMessage(command.getCode());
-//                        builder.setPositiveButton("OK", null);
-//                        builder.show();
                     }
 
                     @Override

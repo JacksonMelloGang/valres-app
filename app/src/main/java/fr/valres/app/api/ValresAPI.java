@@ -27,10 +27,6 @@ public class ValresAPI {
         return urlApi;
     }
 
-    public void executeCommand(Command command){
-        command.execute();
-    }
-
     public static void initInstance(String token, String urlApi){
         if(instance == null)
             instance = new ValresAPI(token, urlApi);
