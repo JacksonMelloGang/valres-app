@@ -55,7 +55,7 @@ public class ValresAPIToken extends AsyncTask<String, Void, String> {
                 .build();
 
         Request request = new Request.Builder()
-                .url(url)
+                .url(url + "/token")
                 .method("POST", body)
                 .build();
 

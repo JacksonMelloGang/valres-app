@@ -12,7 +12,6 @@ import java.util.ArrayList;
 
 import fr.valres.app.api.ValresAPI;
 import fr.valres.app.controller.ChoixDateSalle;
-import fr.valres.app.model.Categorie;
 import fr.valres.app.model.Salle;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

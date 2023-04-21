@@ -21,13 +21,18 @@ public class AfficherDigicodeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_afficher_digicode);
 
         TextView digicode = (TextView) findViewById(R.id.digicode);
-
         Button btRetour = (Button) findViewById(R.id.btRetour);
 
         //Set digicode
-        Bundle extras = getIntent().getExtras();
-        String digicodeSTR = String.valueOf(extras.getInt("digicode"));
-        digicode.setText(digicodeSTR);
+        if(getIntent().getExtras() != null){
+            Bundle extras = getIntent().getExtras();
+            String code = extras.getString("digicode");
+            if(code.equals("-1")){
+                digicode.setText("Aucun digicode dans la base de données");
+            } else {
+                digicode.setText(code);
+            }
+        }
 
         btRetour.setOnClickListener(new View.OnClickListener() {
             @Override

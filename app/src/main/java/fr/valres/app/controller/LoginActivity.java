@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,10 +20,12 @@ import fr.valres.app.MySQLiteHelper;
 import fr.valres.app.R;
 import fr.valres.app.api.ValresAPI;
 import fr.valres.app.api.ValresAPIToken;
+import fr.valres.app.api.command.Command;
+import fr.valres.app.api.command.getCategoriesCommand;
+import fr.valres.app.api.command.getSallesCommand;
 
 public class LoginActivity extends AppCompatActivity {
 
-    final MySQLiteHelper db = new MySQLiteHelper(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
                     Context context = getApplicationContext();
 
                     try {
-                        AsyncTask task = new ValresAPIToken(context).execute("http://172.16.225.76:8080/api/v1/token", login, password);
+                        AsyncTask task = new ValresAPIToken(context).execute("http://172.16.225.76:8080/api/v1", login, password);
                         task.get();
                     } catch (ExecutionException | InterruptedException e) {
                         e.printStackTrace();

@@ -16,36 +16,36 @@ import java.util.Map;
 
 import fr.valres.app.api.ValresAPI;
 import fr.valres.app.model.Category;
-import fr.valres.app.model.Salle;
 import fr.valres.app.repository.CategoryRepository;
-import fr.valres.app.repository.SalleRepository;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class getSallesCommand implements Command {
+public class getCategoriesCommand implements Command {
 
     private String url;
     private String method;
     private Map<String, String> params;
-    private Context context;
 
-    public getSallesCommand(String endpoint, String method, Map<String, String> params, Context context){
+    public getCategoriesCommand(String endpoint, String method, Map<String, String> params){
         this.url = ValresAPI.getInstance().getUrlApi() + "/" + endpoint;
         this.method = method;
         this.params = params;
-        this.context = context;
     }
+
 
 
     @Override
     public void execute() {
+        Log.i("getCategoriesCommand", "execute: " + url);
+
         @SuppressLint("StaticFieldLeak")
         AsyncTask task = new AsyncTask() {
             @Override
             protected Object doInBackground(Object[] objects) {
+                // init GET okHTTP Request
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder()
                         .url(url)
@@ -55,7 +55,7 @@ public class getSallesCommand implements Command {
                 client.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                        e.printStackTrace();
+                        Log.i("getCategoriesCommand", "onFailure: " + e.getMessage());
                     }
 
                     @Override
@@ -66,20 +66,20 @@ public class getSallesCommand implements Command {
                         }
 
                         try {
-                            String reponseBody = response.body().string();
-                            JSONArray json = new JSONArray(reponseBody);
+                            String responseBody = response.body().string();
+                            JSONObject json = new JSONObject(responseBody);
+                            // for each element in categories, create Category Object
+                            // and add it to the list of categories
+                            JSONArray categories = json.getJSONArray("categories");
+                            for (int i = 0; i < categories.length(); i++) {
+                                JSONObject category = categories.getJSONObject(i);
+                                int id = category.getInt("cat_id");
+                                String libelle = category.getString("libelle");
+                                Category c = new Category(id, libelle);
 
-                            for(int i = 0; i < json.length(); i++){
-                                JSONObject salleJson = json.getJSONObject(i);
-                                int salleId = salleJson.getInt("salle_id");
-                                String salleName = salleJson.getString("salle_nom");
-                                Category catId = CategoryRepository.getInstance().getCategory(salleJson.getInt("cat_id"));
-
-                                Salle salle = new Salle(salleId, salleName, catId);
-                                SalleRepository.getInstance().addSalle(salle);
-                                Log.i("getSallesCommand", "adding salle: " + salle.toString());
+                                CategoryRepository.getInstance().addCategory(c);
                             }
-                        } catch (JSONException e) {
+                        } catch (JSONException e){
                             e.printStackTrace();
                         }
                     }
@@ -90,5 +90,6 @@ public class getSallesCommand implements Command {
         };
 
         task.execute();
+
     }
 }

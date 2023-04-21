@@ -1,6 +1,7 @@
 package fr.valres.app.api.command;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -16,46 +17,56 @@ import java.util.Map;
 
 import fr.valres.app.api.ValresAPI;
 import fr.valres.app.model.Category;
-import fr.valres.app.model.Salle;
 import fr.valres.app.repository.CategoryRepository;
-import fr.valres.app.repository.SalleRepository;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class getSallesCommand implements Command {
-
+public class getCodeSalleCommand {
     private String url;
     private String method;
     private Map<String, String> params;
-    private Context context;
+    private String[] code = new String[1];
 
-    public getSallesCommand(String endpoint, String method, Map<String, String> params, Context context){
+    public getCodeSalleCommand(String endpoint, String method, Map<String, String> params){
         this.url = ValresAPI.getInstance().getUrlApi() + "/" + endpoint;
         this.method = method;
         this.params = params;
-        this.context = context;
     }
 
+    public void execute(CommandCallback callback) {
+        Log.i("getCategoriesCommand", "execute: " + url);
 
-    @Override
-    public void execute() {
         @SuppressLint("StaticFieldLeak")
         AsyncTask task = new AsyncTask() {
             @Override
             protected Object doInBackground(Object[] objects) {
+                // init GET okHTTP Request
                 OkHttpClient client = new OkHttpClient();
+
+
+                HttpUrl.Builder urlBuilder = HttpUrl.parse(url).newBuilder();
+                for (Map.Entry<String, String> entry : params.entrySet()) {
+                    Log.i("getCodeSalle", "doInBackground: " + entry.getKey() + " " + entry.getValue());
+                    urlBuilder.addQueryParameter(entry.getKey(), entry.getValue());
+                }
+
+                String url = urlBuilder.build().toString();
+                Log.i("getCodeSalle", "doInBackground: " + url);
+
                 Request request = new Request.Builder()
                         .url(url)
                         .header("Authorization", ValresAPI.getInstance().getToken())
                         .build();
 
+
                 client.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                        e.printStackTrace();
+                        Log.i("getCategoriesCommand", "onFailure: " + e.getMessage());
                     }
 
                     @Override
@@ -66,20 +77,13 @@ public class getSallesCommand implements Command {
                         }
 
                         try {
-                            String reponseBody = response.body().string();
-                            JSONArray json = new JSONArray(reponseBody);
+                            String responseBody = response.body().string();
+                            JSONObject json = new JSONObject(responseBody);
+                            code[0] = json.getString("code");
 
-                            for(int i = 0; i < json.length(); i++){
-                                JSONObject salleJson = json.getJSONObject(i);
-                                int salleId = salleJson.getInt("salle_id");
-                                String salleName = salleJson.getString("salle_nom");
-                                Category catId = CategoryRepository.getInstance().getCategory(salleJson.getInt("cat_id"));
+                            callback.onSuccess();
 
-                                Salle salle = new Salle(salleId, salleName, catId);
-                                SalleRepository.getInstance().addSalle(salle);
-                                Log.i("getSallesCommand", "adding salle: " + salle.toString());
-                            }
-                        } catch (JSONException e) {
+                        } catch (JSONException e){
                             e.printStackTrace();
                         }
                     }
@@ -91,4 +95,10 @@ public class getSallesCommand implements Command {
 
         task.execute();
     }
+
+    public String getCode() {
+        return code[0];
+    }
+
+
 }
