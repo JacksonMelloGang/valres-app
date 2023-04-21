@@ -1,10 +1,9 @@
 package fr.valres.app.controller;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.net.ConnectivityManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,48 +11,49 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.HashMap;
 
-import fr.valres.app.MySQLiteHelper;
 import fr.valres.app.R;
-import fr.valres.app.utils.ValresWebsiteGet;
+import fr.valres.app.api.ValresAPI;
+import fr.valres.app.api.command.Command;
+import fr.valres.app.api.command.CommandCallback;
+import fr.valres.app.api.command.getCodeSalleCommand;
+import fr.valres.app.model.Salle;
+import fr.valres.app.repository.SalleRepository;
 
 public class ChoixDateSalle extends AppCompatActivity {
 
-    final MySQLiteHelper db = new MySQLiteHelper(ChoixDateSalle.this);
-    public static final String HTTP_SALLE = "http://172.16.225.170:8080/api/salles";
+    public static final String HTTP_SALLE = ValresAPI.getInstance().getUrlApi() + "/salles";
     private String[] salles = {};
+    private long[] dateArray = new long[1];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choix_date_salle);
+        dateArray[0] = new Date().getTime();
 
         CalendarView calendarView = (CalendarView) findViewById(R.id.calendarView);
         ListView lvSalle = (ListView) findViewById(R.id.listSalles);
 
-        TextView txMois = (TextView) findViewById(R.id.txMois);
-        TextView txSalle = (TextView) findViewById(R.id.txSalle);
+        Button button = (Button) findViewById(R.id.btAfficheDigicode);
 
-        Button button = (Button) findViewById(R.id.button);
-
-        // check if android device is connected to internet
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
-        if(cm.getActiveNetworkInfo() == null){
-            Toast.makeText(ChoixDateSalle.this, "Pas de connexion internet", Toast.LENGTH_SHORT).show();
-            return;
+        // add items in lvSalles
+        HashMap<Integer, Salle> hashSalles = SalleRepository.getInstance().getSalles();
+        salles = new String[hashSalles.size()];
+        int i = 0;
+        for (Salle salle : hashSalles.values()) {
+            salles[i] = salle.getNom();
+            i++;
         }
 
 
-        new ValresWebsiteGet(ChoixDateSalle.this).execute(HTTP_SALLE);
-
-        // add items in lvSalles
-        // String[] salles = {"Majorelle", "Gruber", "Lamour", "Longwy"};
-
+        lvSalle.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         lvSalle.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, salles));
 
         lvSalle.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -64,17 +64,13 @@ public class ChoixDateSalle extends AppCompatActivity {
                 int numSalle = 0;
                 numSalle = position+1;
                 lvSalle.setItemChecked(position, true);
-
-                txSalle.setText(String.format("Salle n°%s : %s", numSalle, salle));
-
             }
         });
 
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                String date = dayOfMonth + "/" + month + "/" + year;
-                txMois.setText(date);
+                dateArray[0] = new Date(year, month, dayOfMonth).getTime();
             }
         });
 
@@ -84,35 +80,40 @@ public class ChoixDateSalle extends AppCompatActivity {
 
                 // get code from salle
                 int numSalle = lvSalle.getCheckedItemPosition()+1;
-                Date date = new Date(calendarView.getDate());
+                Date date = new Date(dateArray[0]);
 
-                // if no date selected or no salle selected
-                if(txMois.getText().toString().length() == 0 || txSalle.getText().toString().length() == 0){
-                    AlertDialog alertDialog = new AlertDialog.Builder(ChoixDateSalle.this).create();
-                    alertDialog.setTitle("Code");
-                    alertDialog.setMessage("Aucune salle ou date sélectionnée");
-                    alertDialog.show();
+                HashMap<String, String> params = new HashMap<>();
+                params.put("salle_id", String.valueOf(numSalle));
+                params.put("year", String.valueOf(date.getYear()));
+                params.put("month", String.valueOf(date.getMonth()+1));
 
-                    return;
-                }
+                getCodeSalleCommand command = new getCodeSalleCommand("code", "GET", params);
+                command.execute(new CommandCallback() {
+                    @Override
+                    public void onSuccess() {
+                        Bundle b = new Bundle();
+                        b.putString("digicode", command.getCode());
 
-                int code = db.recupDigicode(numSalle, date);
+                        Intent intent = new Intent(ChoixDateSalle.this, AfficherDigicodeActivity.class);
+                        intent.putExtras(b);
+                        startActivity(intent);
+//
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(ChoixDateSalle.this);
+//                        builder.setTitle("Code");
+//                        builder.setMessage(command.getCode());
+//                        builder.setPositiveButton("OK", null);
+//                        builder.show();
+                    }
 
-                if(code == 0){
-                    AlertDialog alertDialog = new AlertDialog.Builder(ChoixDateSalle.this).create();
-                    alertDialog.setTitle("Code");
-                    alertDialog.setMessage("Aucun code trouvé");
-                    alertDialog.show();
-
-                    return;
-                }
-
-                Toast.makeText(ChoixDateSalle.this, String.format("Code : %s", code), Toast.LENGTH_LONG).show();
-                AlertDialog alertDialog = new AlertDialog.Builder(ChoixDateSalle.this).create();
-                alertDialog.setTitle("Code");
-                alertDialog.setMessage(String.format("Code : %s", code));
-                alertDialog.show();
-
+                    @Override
+                    public void onError() {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ChoixDateSalle.this);
+                        builder.setTitle("Erreur");
+                        builder.setMessage("Erreur lors de la récupération du code");
+                        builder.setPositiveButton("OK", null);
+                        builder.show();
+                    }
+                });
             }
         });
 
