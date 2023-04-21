@@ -28,7 +28,8 @@ public class AfficherDigicodeActivity extends AppCompatActivity {
             Bundle extras = getIntent().getExtras();
             String code = extras.getString("digicode");
             if(code.equals("-1")){
-                digicode.setText("Aucun digicode dans la base de données");
+                digicode.setTextSize(16);
+                digicode.setText("Aucun digicode disponible pour cette salle");
             } else {
                 digicode.setText(code);
             }
