@@ -115,7 +115,7 @@ public class ValresAPIToken extends AsyncTask<String, Void, String> {
             return;
         }
 
-        //durgan.tierra
+        //durgan.tierra, password
         ValresAPI.initInstance(token, url);
     }
 }

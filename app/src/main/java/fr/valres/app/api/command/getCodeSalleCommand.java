@@ -72,7 +72,7 @@ public class getCodeSalleCommand {
                     @Override
                     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                         if(!response.isSuccessful()){
-                            Log.i("getSallesCommand", "onResponse: " + response.body().string());
+                            Log.i("getSallesCommand", "onResponse: " + response.code());
                             return;
                         }
 

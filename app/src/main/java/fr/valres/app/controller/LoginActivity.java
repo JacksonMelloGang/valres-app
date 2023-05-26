@@ -16,6 +16,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import fr.valres.app.CONFIG;
 import fr.valres.app.MySQLiteHelper;
 import fr.valres.app.R;
 import fr.valres.app.api.ValresAPI;
@@ -48,8 +49,8 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     Context context = getApplicationContext();
 
-                    try {
-                        AsyncTask task = new ValresAPIToken(context).execute("http://172.16.225.76:8080/api/v1", login, password);
+                    try { // TODO: ADD CONFIG FILE TO GET URL
+                        AsyncTask task = new ValresAPIToken(context).execute(CONFIG.API_URL, login, password);
                         task.get();
                     } catch (ExecutionException | InterruptedException e) {
                         e.printStackTrace();
