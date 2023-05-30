@@ -13,17 +13,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import fr.valres.app.CONFIG;
-import fr.valres.app.MySQLiteHelper;
 import fr.valres.app.R;
 import fr.valres.app.api.ValresAPI;
 import fr.valres.app.api.ValresAPIToken;
-import fr.valres.app.api.command.Command;
-import fr.valres.app.api.command.getCategoriesCommand;
-import fr.valres.app.api.command.getSallesCommand;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -49,16 +43,22 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     Context context = getApplicationContext();
 
+                    //TODO: CREDENTIALS - user: durgan.tierra, passwd: password
+
                     try { // TODO: ADD CONFIG FILE TO GET URL
+                        // Create a new thread where we instantiate the request to verify the credential provided and to get the token,
                         AsyncTask task = new ValresAPIToken(context).execute(CONFIG.API_URL, login, password);
                         task.get();
+
                     } catch (ExecutionException | InterruptedException e) {
                         e.printStackTrace();
                     }
 
+                    // as it's an async task, it might provide an "invalid credentials" error the first time, if that's the case, try again.
                     if(ValresAPI.getInstance() != null){
                         Toast.makeText(LoginActivity.this, "Connexion réussie", Toast.LENGTH_SHORT).show();
 
+                        // start acceuil activity
                         Intent intent = new Intent(LoginActivity.this, AccueilActivity.class);
                         startActivity(intent);
                     }else{
