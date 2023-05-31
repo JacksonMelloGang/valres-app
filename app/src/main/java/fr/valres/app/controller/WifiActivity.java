@@ -31,9 +31,6 @@ public class WifiActivity extends AppCompatActivity {
         TextView codeWifi = (TextView) findViewById(R.id.codeWifi);
 
 
-
-
-
         String code = genCodeWifi();
         codeWifi.setText(code);
         codeWifi.setTextSize(20);
