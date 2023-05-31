@@ -26,11 +26,19 @@ public class WifiActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi);
 
-        TextView codeWifi = (TextView) findViewById(R.id.codeWifi);
-        codeWifi.setText(genCodeWifi());
-
         Button btRetour = (Button) findViewById(R.id.btRetour);
         Button btReload = (Button) findViewById(R.id.btReload);
+        TextView codeWifi = (TextView) findViewById(R.id.codeWifi);
+
+
+
+
+
+        String code = genCodeWifi();
+        codeWifi.setText(code);
+        codeWifi.setTextSize(20);
+        codeWifi.setTextColor(getResources().getColor(R.color.black));
+
 
         btReload.setOnClickListener(new View.OnClickListener() {
             @Override

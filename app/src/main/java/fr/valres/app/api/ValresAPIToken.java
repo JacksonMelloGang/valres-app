@@ -44,6 +44,7 @@ public class ValresAPIToken extends AsyncTask<String, Void, String> {
         String password = strings[2];
         String token = null;
 
+        // create a new http client
         OkHttpClient client = new OkHttpClient().newBuilder().build();
         MediaType mediaType = MediaType.parse("text/plain");
 
@@ -54,20 +55,24 @@ public class ValresAPIToken extends AsyncTask<String, Void, String> {
                 .addFormDataPart("password", password)
                 .build();
 
+        // create request
         Request request = new Request.Builder()
                 .url(url + "/token")
                 .method("POST", body)
                 .build();
 
+        // execute request
         try {
             Response response = client.newCall(request).execute();
             if(response.isSuccessful()){
+                // if the request is successful, verify the code and if it's a valid code (1), get the token from the response
                 ResponseBody responseBody = response.body();
                 String responseString = responseBody.string();
 
                 if(responseString != null && !responseString.isEmpty()){
                     String json = responseString.trim();
 
+                    // parse the json response, if the code is 1, get the token, else, set the token to invalid
                     try {
                         JSONObject resulttoken = new JSONObject(json);
                         if(resulttoken.getString("code").equals("1")){
@@ -77,6 +82,7 @@ public class ValresAPIToken extends AsyncTask<String, Void, String> {
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        token = "invalid";
                     }
                 } else {
                     token = "invalid";
@@ -115,7 +121,7 @@ public class ValresAPIToken extends AsyncTask<String, Void, String> {
             return;
         }
 
-        //durgan.tierra
+        //durgan.tierra, password
         ValresAPI.initInstance(token, url);
     }
 }

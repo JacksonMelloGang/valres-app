@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -15,6 +16,7 @@ import android.widget.ListView;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -40,8 +42,9 @@ public class ChoixDateSalle extends AppCompatActivity {
 
         CalendarView calendarView = (CalendarView) findViewById(R.id.calendarView);
         ListView lvSalle = (ListView) findViewById(R.id.listSalles);
+        Button btRetour = (Button) findViewById(R.id.btRetour);
 
-        Button button = (Button) findViewById(R.id.btAfficheDigicode);
+        Button btAfficherCode = (Button) findViewById(R.id.btAfficheDigicode);
 
         // add items in lvSalles
         HashMap<Integer, Salle> hashSalles = SalleRepository.getInstance().getSalles();
@@ -70,22 +73,33 @@ public class ChoixDateSalle extends AppCompatActivity {
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                dateArray[0] = new Date(year, month, dayOfMonth).getTime();
+                Log.i("date", "onSelectedDayChange: " + dayOfMonth + "/" + (month+1) + "/" + year);
+                // create date from calendarView
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(year, (month+1), dayOfMonth);
+                Date date = calendar.getTime();
+
+                dateArray[0] = date.getTime();
+
+                String dateStr = dayOfMonth + "/" + (month+1) + "/" + year;
+                Log.i("date", "onSelectedDayChange: " + dateStr);
             }
         });
 
-        button.setOnClickListener(new View.OnClickListener() {
+        btAfficherCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 // get code from salle
                 int numSalle = lvSalle.getCheckedItemPosition()+1;
                 Date date = new Date(dateArray[0]);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put("salle_id", String.valueOf(numSalle));
-                params.put("year", String.valueOf(date.getYear()));
-                params.put("month", String.valueOf(date.getMonth()+1));
+                params.put("year", String.valueOf(calendar.get(Calendar.YEAR)));
+                params.put("month", String.valueOf(calendar.get(Calendar.MONTH)));
 
                 getCodeSalleCommand command = new getCodeSalleCommand("code", "GET", params);
                 command.execute(new CommandCallback() {
@@ -111,7 +125,16 @@ public class ChoixDateSalle extends AppCompatActivity {
             }
         });
 
+        btRetour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
     }
+
+
 
     public String[] getSalles() {
         return salles;
