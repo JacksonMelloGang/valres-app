@@ -1,7 +1,6 @@
 package fr.valres.app.api.command;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -13,39 +12,42 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import fr.valres.app.api.ValresAPI;
+import fr.valres.app.model.Batiment;
 import fr.valres.app.model.Category;
-import fr.valres.app.model.Salle;
+import fr.valres.app.repository.BatimentRepository;
 import fr.valres.app.repository.CategoryRepository;
-import fr.valres.app.repository.SalleRepository;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class getSallesCommand implements Command {
+public class getBatimentsCommand implements Command {
 
     private String url;
     private String method;
     private Map<String, String> params;
-    private Context context;
 
-    public getSallesCommand(String endpoint, String method, Map<String, String> params, Context context){
+    public getBatimentsCommand(String endpoint, String method, Map<String, String> params){
         this.url = ValresAPI.getInstance().getUrlApi() + "/" + endpoint;
         this.method = method;
         this.params = params;
-        this.context = context;
     }
+
 
 
     @Override
     public void execute() {
+        Log.i("getCategoriesCommand", "execute: " + url);
+
         @SuppressLint("StaticFieldLeak")
         AsyncTask task = new AsyncTask() {
             @Override
             protected Object doInBackground(Object[] objects) {
+                // init GET okHTTP Request
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder()
                         .url(url)
@@ -55,33 +57,34 @@ public class getSallesCommand implements Command {
                 client.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                        e.printStackTrace();
+                        Log.i("getBatimentsCommand", "onFailure: " + e.getMessage());
                     }
 
                     @Override
                     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                         if(!response.isSuccessful()){
-                            Log.i("getSallesCommand", "onResponse: " + response.body().string());
+                            Log.i("getBatimentsCommand", "onResponse: " + response.body().string());
                             return;
                         }
 
-                        SalleRepository.getInstance().getSalles().clear();
-
                         try {
-                            String reponseBody = response.body().string();
-                            JSONArray json = new JSONArray(reponseBody);
+                            String responseBody = response.body().string();
+                            JSONObject json = new JSONObject(responseBody);
+                            // for each element in batiments, create Batiment Object
+                            // and add it to the list of batiments
+                            JSONArray batiments = json.getJSONArray("batiments");
+                            for (int i = 0; i < batiments.length(); i++) {
+                                JSONObject batimentsJSONObject = batiments.getJSONObject(i);
 
-                            for(int i = 0; i < json.length(); i++){
-                                JSONObject salleJson = json.getJSONObject(i);
-                                int salleId = salleJson.getInt("salle_id");
-                                String salleName = salleJson.getString("salle_nom");
-                                Category catId = CategoryRepository.getInstance().getCategory(salleJson.getInt("cat_id"));
+                                String name = batimentsJSONObject.getString("name");
+                                int code = batimentsJSONObject.getInt("code");
 
-                                Salle salle = new Salle(salleId, salleName, catId);
-                                SalleRepository.getInstance().addSalle(salle);
-                                Log.i("getSallesCommand", "adding salle: " + salle.toString());
+                                Batiment b = new Batiment(name, code);
+
+                                BatimentRepository.getInstance().addBatiment(b);
+                                Log.i("getBatimentsCommand", "adding: " + b.toString());
                             }
-                        } catch (JSONException e) {
+                        } catch (JSONException e){
                             e.printStackTrace();
                         }
                     }
@@ -92,5 +95,6 @@ public class getSallesCommand implements Command {
         };
 
         task.execute();
+
     }
 }

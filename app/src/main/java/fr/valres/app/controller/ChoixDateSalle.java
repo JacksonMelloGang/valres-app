@@ -24,6 +24,7 @@ import fr.valres.app.R;
 import fr.valres.app.api.ValresAPI;
 import fr.valres.app.api.command.Command;
 import fr.valres.app.api.command.CommandCallback;
+import fr.valres.app.api.command.getBatimentSallesCommand;
 import fr.valres.app.api.command.getCodeSalleCommand;
 import fr.valres.app.model.Salle;
 import fr.valres.app.repository.SalleRepository;
@@ -45,6 +46,12 @@ public class ChoixDateSalle extends AppCompatActivity {
         Button btRetour = (Button) findViewById(R.id.btRetour);
 
         Button btAfficherCode = (Button) findViewById(R.id.btAfficheDigicode);
+
+        Command getBatimentSalles = new getBatimentSallesCommand("batiments//salles", "GET", null);
+        Log.i("ChoixDateSalle", "executing getBatimentSalles");
+
+
+
 
         // add items in lvSalles
         HashMap<Integer, Salle> hashSalles = SalleRepository.getInstance().getSalles();
